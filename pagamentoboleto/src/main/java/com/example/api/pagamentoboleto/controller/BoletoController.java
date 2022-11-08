@@ -1,32 +1,27 @@
 package com.example.api.pagamentoboleto.controller;
 
 import com.example.api.pagamentoboleto.dto.TransacaoDTO;
-import com.example.api.pagamentoboleto.repository.BoletoRepository;
-import com.example.api.pagamentoboleto.request.BancoAq4request;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
+import com.example.api.pagamentoboleto.exceptions.ContaBloqueadaException;
+import com.example.api.pagamentoboleto.exceptions.SaldoInsuficienteException;
+import com.example.api.pagamentoboleto.service.BoletoService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.RestTemplate;
 
+@AllArgsConstructor
 @Controller
-@RequestMapping(path = "/boleto")
+@RequestMapping(value = "/payment")
 public class BoletoController {
 
-    @Autowired
-    private BoletoRepository repository;
+    private  final BoletoService service;
 
-    @Autowired
-    private BancoAq4request request;
-
-    @PostMapping
-    public ResponseEntity<TransacaoDTO> boleto(@RequestBody TransacaoDTO transacaoDTO){
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<TransacaoDTO> request = new HttpEntity<>(transacaoDTO);
-        ResponseEntity<TransacaoDTO> response = restTemplate.postForEntity("http://localhost:8081/transacoes/boleto", request, TransacaoDTO.class);
-        return response;
+    @PostMapping(value = "/boleto")
+    public ResponseEntity boleto(@RequestBody TransacaoDTO transacaoDTO) throws SaldoInsuficienteException, ContaBloqueadaException {
+        return new ResponseEntity(service.boleto(transacaoDTO), HttpStatus.OK);
     }
 }
+
