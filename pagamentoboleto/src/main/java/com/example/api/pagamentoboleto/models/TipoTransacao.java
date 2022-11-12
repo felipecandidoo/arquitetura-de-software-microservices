@@ -2,7 +2,7 @@ package com.example.api.pagamentoboleto.models;
 
 public enum TipoTransacao {
 
-    SAQUE, DEPOSITO, PAGAMENTO_BOLETO;
+    SAQUE, DEPOSITO, BOLETO;
 
     public int id;
 

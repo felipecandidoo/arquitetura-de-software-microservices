@@ -11,12 +11,3 @@ spring:
     console:
       enabled: true
       path: /h2-console
-  application:
-    name: bank-api
-server:
-  port: ${PORT:8081}
-
-eureka:
-  client:
-    service-url:
-      default-zone: http://localhost:8761/eureka
